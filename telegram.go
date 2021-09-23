@@ -82,18 +82,22 @@ func (t *LndEventObserver) Update(e *events.Event) {
 }
 
 func (t *LndEventObserver) constructTelegramMessage(e *events.Event) tgbotapi.MessageConfig {
-	html := "<b>New Forward Event</b>\n"
-	html += fmt.Sprintf("From: %s\n", e.FromAlias)
-	html += fmt.Sprintf("To: %s\n", e.ToAlias)
-	html += fmt.Sprintf("%d sats --> %d sats\n", e.IncomingMSats/1000, e.OutgoingMSats/1000)
-	html += fmt.Sprintf("Fee: %d sats\n", (e.IncomingMSats-e.OutgoingMSats)/1000)
+	html := fmt.Sprintf("<b>New %s</b>\n", e.Type)
+	if e.Type == "ForwardEvent" {
+		html += fmt.Sprintf("From: %s\n", e.FromAlias)
+		html += fmt.Sprintf("To: %s\n", e.ToAlias)
+		html += fmt.Sprintf("%d sats --> %d sats\n", e.IncomingMSats/1000, e.OutgoingMSats/1000)
+		html += fmt.Sprintf("Fee: %d sats\n", (e.IncomingMSats-e.OutgoingMSats)/1000)
+	}
 	message := tgbotapi.NewMessage(t.tgChatId, html)
 	message.ParseMode = tgbotapi.ModeHTML
 	return message
 }
 
 func logEvent(e *events.Event) {
-	log.Printf("%s -> %s\n", e.FromPubKey, e.ToPubKey)
-	log.Printf("Incoming %d msat, Outgoin %d msats\n", e.IncomingMSats, e.OutgoingMSats)
-	log.Printf("Fee earned: %d msats\n", e.IncomingMSats-e.OutgoingMSats)
+	if e.Type == "ForwardEvent" {
+		log.Printf("%s -> %s\n", e.FromPubKey, e.ToPubKey)
+		log.Printf("Incoming %d msat, Outgoin %d msats\n", e.IncomingMSats, e.OutgoingMSats)
+		log.Printf("Fee earned: %d msats\n", e.IncomingMSats-e.OutgoingMSats)
+	}
 }
