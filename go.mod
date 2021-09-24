@@ -3,10 +3,6 @@ module github.com/hieblmi/telegram-lnd-events
 go 1.17
 
 require (
-	github.com/go-telegram-bot-api/telegram-bot-api v4.6.4+incompatible
-)
-
-require (
 	github.com/aead/chacha20 v0.0.0-20180709150244-8b13a72661da // indirect
 	github.com/aead/siphash v1.0.1 // indirect
 	github.com/beorn7/perks v1.0.0 // indirect
