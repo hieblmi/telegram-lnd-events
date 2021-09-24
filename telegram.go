@@ -89,7 +89,7 @@ func (t *LndEventObserver) constructTelegramMessage(e *events.Event) tgbotapi.Me
 	html += fmt.Sprintf("HtlcId_In: %d\n", e.HtlcId_In)
 	html += fmt.Sprintf("HtlcId_Out: %d\n", e.HtlcId_Out)
 	switch e.Type {
-	case "ForwardEvent":
+	case "SettleEvent":
 		{
 			html += fmt.Sprintf("%d sats --> %d sats\n", e.IncomingMSats/1000, e.OutgoingMSats/1000)
 			html += fmt.Sprintf("Fee: %d sats\n", (e.IncomingMSats-e.OutgoingMSats)/1000)
