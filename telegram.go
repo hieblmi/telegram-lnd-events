@@ -84,6 +84,10 @@ func (t *LndEventObserver) constructTelegramMessage(e *events.Event) tgbotapi.Me
 	html := fmt.Sprintf("<b>New %s</b>\n", e.Type)
 	html += fmt.Sprintf("From: %s\n", e.FromAlias)
 	html += fmt.Sprintf("To: %s\n", e.ToAlias)
+	html += fmt.Sprintf("ChanId_In: %d\n", e.ChanId_In)
+	html += fmt.Sprintf("ChanId_Out: %d\n", e.ChanId_Out)
+	html += fmt.Sprintf("HtlcId_In: %d\n", e.HtlcId_In)
+	html += fmt.Sprintf("HtlcId_Out: %d\n", e.HtlcId_Out)
 	switch e.Type {
 	case "ForwardEvent":
 		{
