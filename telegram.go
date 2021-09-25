@@ -92,7 +92,7 @@ func (t *LndEventObserver) Update(e *events.Event) {
 func (t *LndEventObserver) constructTelegramMessage(e *events.Event) tgbotapi.MessageConfig {
 	html := fmt.Sprintf("New <b>%s</b>\n", e.Type)
 	html += fmt.Sprintf("From: <b>%s</b>\n", e.FromAlias)
-	html += fmt.Sprintf("To  : <b>%s</b>n", e.ToAlias)
+	html += fmt.Sprintf("To  : <b>%s</b>\n", e.ToAlias)
 	switch e.Type {
 	case "SettleEvent":
 		{
