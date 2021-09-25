@@ -4,8 +4,10 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"html"
 	"log"
 	"os"
+	"strconv"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 	"github.com/hieblmi/go-lnd-router-events/events"
@@ -24,6 +26,8 @@ type LndEventObserver struct {
 	tgBot    *tgbotapi.BotAPI
 	tgChatId int64
 }
+
+var dollarSign string
 
 func main() {
 
@@ -47,6 +51,11 @@ func main() {
 		log.Println("Cannot indent json config.")
 	}
 	log.Printf("Printing config.json: %s\n", string(b))
+
+	// parse dollar Unicode sign
+	h := "0x0001F4B2"
+	i, _ := strconv.ParseInt(h, 0, 64)
+	dollarSign = html.UnescapeString(string(i))
 
 	// intialize Telegram Bot
 	TgBot, err := tgbotapi.NewBotAPI(config.TelegramToken)
@@ -81,18 +90,14 @@ func (t *LndEventObserver) Update(e *events.Event) {
 }
 
 func (t *LndEventObserver) constructTelegramMessage(e *events.Event) tgbotapi.MessageConfig {
-	html := fmt.Sprintf("<b>New %s</b>\n", e.Type)
-	html += fmt.Sprintf("From: %s\n", e.FromAlias)
-	html += fmt.Sprintf("To: %s\n", e.ToAlias)
-	html += fmt.Sprintf("ChanId_In: %d\n", e.ChanId_In)
-	html += fmt.Sprintf("ChanId_Out: %d\n", e.ChanId_Out)
-	html += fmt.Sprintf("HtlcId_In: %d\n", e.HtlcId_In)
-	html += fmt.Sprintf("HtlcId_Out: %d\n", e.HtlcId_Out)
+	html := fmt.Sprintf("New <b>%s</b>\n", e.Type)
+	html += fmt.Sprintf("From: <b>%s</b>\n", e.FromAlias)
+	html += fmt.Sprintf("To  : <b>%s</b>n", e.ToAlias)
 	switch e.Type {
 	case "SettleEvent":
 		{
-			html += fmt.Sprintf("%d msat --> %d msat\n", e.IncomingMSats, e.OutgoingMSats)
-			html += fmt.Sprintf("Fee: %d msat\n", (e.IncomingMSats - e.OutgoingMSats))
+			html += fmt.Sprintf("%d sats --> %d sats\n", e.IncomingMSats, e.OutgoingMSats)
+			html += fmt.Sprintf("%sFee: %d msat\n", dollarSign, (e.IncomingMSats - e.OutgoingMSats))
 		}
 	}
 
