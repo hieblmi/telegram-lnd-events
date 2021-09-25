@@ -90,14 +90,14 @@ func (t *LndEventObserver) Update(e *events.Event) {
 }
 
 func (t *LndEventObserver) constructTelegramMessage(e *events.Event) tgbotapi.MessageConfig {
-	html := fmt.Sprintf("New <b>%s</b>\n", e.Type)
-	html += fmt.Sprintf("From: <b>%s</b>\n", e.FromAlias)
-	html += fmt.Sprintf("To  : <b>%s</b>\n", e.ToAlias)
+	html := fmt.Sprintf("New <b>%s</b> (in msat)\n", e.Type)
 	switch e.Type {
 	case "SettleEvent":
 		{
-			html += fmt.Sprintf("%d sats --> %d sats\n", e.IncomingMSats, e.OutgoingMSats)
-			html += fmt.Sprintf("%sFee: %d msat\n", dollarSign, (e.IncomingMSats - e.OutgoingMSats))
+			html += fmt.Sprintf("<b>%s</b>(%d)\n", e.FromAlias, e.IncomingMSats)
+			html += fmt.Sprintf("\tTO \n")
+			html += fmt.Sprintf("<b>%s</b>(%d)\n", e.ToAlias, e.OutgoingMSats)
+			html += fmt.Sprintf("%sEarned: %d\n", dollarSign, (e.IncomingMSats - e.OutgoingMSats))
 		}
 	}
 
