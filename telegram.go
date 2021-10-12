@@ -30,7 +30,6 @@ type LndEventObserver struct {
 var dollarSign string
 
 func main() {
-
 	c := flag.String("config", "./config.json", "Specify the configuration file")
 	flag.Parse()
 	file, err := os.Open(*c)
@@ -74,7 +73,8 @@ func main() {
 		Name:     "BohemianRhapsodyObserver",
 		tgBot:    TgBot,
 		tgChatId: config.TgChatId,
-	})
+	}, events.Forward)
+
 	listener.Start()
 }
 
@@ -92,7 +92,7 @@ func (t *LndEventObserver) Update(e *events.Event) {
 func (t *LndEventObserver) constructTelegramMessage(e *events.Event) tgbotapi.MessageConfig {
 	html := fmt.Sprintf("New <b>%s</b> (in msat)\n", e.Type)
 	switch e.Type {
-	case "SettleEvent":
+	case events.Forward:
 		{
 			html += fmt.Sprintf("<b>%s</b>(%d)\n", e.FromAlias, e.IncomingMSats)
 			html += fmt.Sprintf("\tTO \n")
