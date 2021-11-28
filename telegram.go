@@ -70,7 +70,7 @@ func main() {
 	})
 
 	listener.Register(&LndEventObserver{
-		Name:     "BohemianRhapsodyObserver",
+		Name:     "MyObserver",
 		tgBot:    TgBot,
 		tgChatId: config.TgChatId,
 	}, events.Forward)
